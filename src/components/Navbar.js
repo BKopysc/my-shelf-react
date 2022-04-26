@@ -61,12 +61,16 @@ function Navbar(props) {
                 spacing={{ base: 3, md: 7 }}
                 mb={{ base: 5, md: 0 }}
             >
-                <Link as={RouterLink} to={"/contact"}>
-                    Contact
-                </Link>
-                <Link as={RouterLink} to={"/help"}>
-                    Help
-                </Link>
+                <Box>
+                    <Link as={RouterLink} to={"/contact"}>
+                        Contact
+                    </Link>
+                </Box>
+                <Box>
+                    <Link as={RouterLink} to={"/help"}>
+                        Help
+                    </Link>
+                </Box>
             </Stack>
 
             <Stack
