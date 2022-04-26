@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import Home from './components/Home';
+import Help from './components/Help';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Box className="content" pt={5}>
         <Routes>
           <Route path="/" element={<Home/>} />
+          <Route path="/help" element={<Help/>} />
         </Routes>
       </Box>
     </div>
