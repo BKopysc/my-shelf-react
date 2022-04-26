@@ -1,0 +1,7 @@
+https://www.bezkoder.com/react-hooks-jwt-auth/
+https://github.com/bezkoder/react-hooks-jwt-auth/tree/master/src/components
+
+https://chakra-ui.com/docs/components/overview
+https://react-icons.github.io/react-icons
+
+https://www.bezkoder.com/spring-boot-react-postgresql/
