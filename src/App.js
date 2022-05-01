@@ -7,11 +7,20 @@ import { Routes, Route, Link } from "react-router-dom";
 import Home from './components/Home';
 import Help from './components/Help';
 import Login from './components/Login';
+import AuthService from './services/auth.service';
 
 function App() {
+  const [currentUser, setCurrentUser] = useState(undefined);
+  useEffect(() => {
+    const user = AuthService.getCurrentUser();
+    if (user) {
+      setCurrentUser(user);
+    }
+  },[]);
+
   return (
     <div className="App">
-      <Navbar/>
+      <Navbar currentUser={currentUser} />
       <Box className="content" pt={5}>
         <Routes>
           <Route path="/" element={<Home/>} />

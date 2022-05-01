@@ -14,12 +14,15 @@ const login = (username, password) => {
       password,
     })
     .then((response) => {
+      console.log("response")
       if (response.data.accessToken) {
         localStorage.setItem("user", JSON.stringify(response.data));
+        
       }
-      return response.data;
-    });
+      return response.data; 
+    })
 };
+
 const logout = () => {
   localStorage.removeItem("user");
 };

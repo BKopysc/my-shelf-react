@@ -20,10 +20,16 @@ import {
     Stack,
     textDecoration,
 } from '@chakra-ui/react';
+import AuthService from "../services/auth.service";
 
 const Links = [];
 
 function Navbar(props) {
+    const logOut = () => {
+        AuthService.logout();
+        window.location.reload(true);
+    };
+
     const { isOpen, onOpen, onClose } = useDisclosure();
     const handleToggle = () => (isOpen ? onClose() : onOpen());
 
@@ -73,30 +79,59 @@ function Navbar(props) {
                 </Box>
             </Stack>
 
-            <Stack
-                direction={{ base: "column", md: "row" }}
-                display={{ base: isOpen ? "block" : "none", md: "flex" }}
-                alignItems="center"
-                width={{ base: "full", md: "auto" }}
-                spacing={{ base: 3, md: 3 }}
-            >
-                <hr />
-                <Button
-                    variant="outline"
-                    width={"100px"}
-                    _hover={{ bg: "teal.700", borderColor: "teal.700" }}
+
+            <hr />
+
+            {props.currentUser ? (
+                <Stack
+                    direction={{ base: "column", md: "row" }}
+                    display={{ base: isOpen ? "block" : "none", md: "flex" }}
+                    alignItems="center"
+                    width={{ base: "full", md: "auto" }}
+                    spacing={{ base: 3, md: 3 }}
                 >
-                    Sign up
-                </Button>
-                <br />
-                <Button as={RouterLink} to={"/login"}
-                    variant="outline"
-                    width={"100px"}
-                    _hover={{ bg: "teal.700", borderColor: "teal.700" }}
+                    <Button as={RouterLink} to={"/profile"}
+                        variant="outline"
+                        width={"100px"}
+                        _hover={{ bg: "teal.700", borderColor: "teal.700" }}
+                    >
+                        Profile
+                    </Button>
+                    <br />
+                    <Button as={RouterLink} to={"/"}
+                        variant="outline"
+                        width={"100px"}
+                        _hover={{ bg: "teal.700", borderColor: "teal.700" }}
+                        onClick={logOut}
+                    >
+                        Logout
+                    </Button>
+                </Stack>
+            ) : (
+                <Stack
+                    direction={{ base: "column", md: "row" }}
+                    display={{ base: isOpen ? "block" : "none", md: "flex" }}
+                    alignItems="center"
+                    width={{ base: "full", md: "auto" }}
+                    spacing={{ base: 3, md: 3 }}
                 >
-                    Login
-                </Button>
-            </Stack>
+                    <Button
+                        variant="outline"
+                        width={"100px"}
+                        _hover={{ bg: "teal.700", borderColor: "teal.700" }}
+                    >
+                        Sign up
+                    </Button>
+                    <br />
+                    <Button as={RouterLink} to={"/login"}
+                        variant="outline"
+                        width={"100px"}
+                        _hover={{ bg: "teal.700", borderColor: "teal.700" }}
+                    >
+                        Login
+                    </Button>
+                </Stack>
+            )}
         </Flex>
     );
 };
