@@ -1,5 +1,5 @@
 import { MdMenu, MdClose, MdAdd } from "react-icons/md";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, Navigate, useNavigate } from "react-router-dom";
 import {
     Heading,
     Text,
@@ -22,11 +22,16 @@ import {
 } from '@chakra-ui/react';
 import AuthService from "../services/auth.service";
 
+
 const Links = [];
 
 function Navbar(props) {
+    let navigate = useNavigate();
+    const user = AuthService.getCurrentUser();
+
     const logOut = () => {
         AuthService.logout();
+        navigate("/");
         window.location.reload(true);
     };
 
@@ -82,7 +87,7 @@ function Navbar(props) {
 
             <hr />
 
-            {props.currentUser ? (
+            {user ? (
                 <Stack
                     direction={{ base: "column", md: "row" }}
                     display={{ base: isOpen ? "block" : "none", md: "flex" }}
@@ -98,7 +103,7 @@ function Navbar(props) {
                         Profile
                     </Button>
                     <br />
-                    <Button as={RouterLink} to={"/"}
+                    <Button
                         variant="outline"
                         width={"100px"}
                         _hover={{ bg: "teal.700", borderColor: "teal.700" }}
@@ -115,7 +120,7 @@ function Navbar(props) {
                     width={{ base: "full", md: "auto" }}
                     spacing={{ base: 3, md: 3 }}
                 >
-                    <Button
+                    <Button as={RouterLink} to={"/register"}
                         variant="outline"
                         width={"100px"}
                         _hover={{ bg: "teal.700", borderColor: "teal.700" }}

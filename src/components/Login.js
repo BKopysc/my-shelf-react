@@ -9,22 +9,11 @@ import {
   FormLabel,
   FormErrorMessage,
   FormHelperText,
-  Spacer,
+  Spacer, Alert, AlertIcon
 } from "@chakra-ui/react"
 import LoginForm from "./Forms/LoginForm";
 
-
-const required = (value) => {
-  if (!value) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        This field is required!
-      </div>
-    );
-  }
-};
-
-const Login = () => {
+function Login(props){
   let navigate = useNavigate();
   const form = useRef();
   const checkBtn = useRef();
@@ -72,6 +61,10 @@ const Login = () => {
 
   return (
     <Box>
+      { props.globalMessage ? (<Alert status='info'>
+        <AlertIcon />
+        {props.globalMessage}
+      </Alert>) : (<div></div>) }
       <Box height={"50px"}></Box>
       <Flex flexDirection={'column'} alignItems={"center"} justifyContent={"center"}>
         <Image
