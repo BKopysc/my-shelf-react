@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import AuthService from "../../services/auth.service";
 
-function LoginForm() {
+function LoginForm(props) {
     function validateName(value) {
         let error
         if (!value) {
@@ -32,8 +32,9 @@ function LoginForm() {
         AuthService.login(e.username, e.password)
             .then(
                 () => {
+                    props.setGlobalMessage("Hi! Have a wonderful day 😊");
                     navigate("/profile");
-                    window.location.reload();
+                    //window.location.reload();
                 },
                 (error) => {
                     const resMessage =

@@ -32,7 +32,7 @@ function Navbar(props) {
     const logOut = () => {
         AuthService.logout();
         navigate("/");
-        window.location.reload(true);
+        //window.location.reload(true);
     };
 
     const { isOpen, onOpen, onClose } = useDisclosure();

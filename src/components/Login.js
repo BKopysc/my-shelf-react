@@ -74,7 +74,7 @@ function Login(props){
           alt='profile'
         />
         <Box height={"50px"}></Box>
-        <LoginForm></LoginForm>
+        <LoginForm setGlobalMessage={props.setGlobalMessage}></LoginForm>
       </Flex>
     </Box>
   );

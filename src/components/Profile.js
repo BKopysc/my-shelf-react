@@ -23,10 +23,7 @@ function Profile() {
     //     }
     //   );
     // }, []);
-
-    useEffect(() => {
         const currentUser = AuthService.getCurrentUser();
-    },[])
 
 
 
