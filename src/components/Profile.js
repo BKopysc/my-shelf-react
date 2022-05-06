@@ -1,6 +1,8 @@
 
 import { Box, Heading, Alert, AlertIcon } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import AuthService from "../services/auth.service";
+import DataService from "../services/data.service";
 
 function Profile() {
 
@@ -22,14 +24,19 @@ function Profile() {
     //   );
     // }, []);
 
-    const currentUser = AuthService.getCurrentUser();
+    useEffect(() => {
+        const currentUser = AuthService.getCurrentUser();
+    },[])
+
+
 
     return (
         <Box>
 
             {currentUser ?
                 (<Box>
-                    <Heading>Hi! {currentUser.username}</Heading>
+                    <Heading></Heading>
+                    <Heading>Profile!</Heading>
                 </Box>)
                 :
                 (
