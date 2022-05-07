@@ -73,6 +73,11 @@ function Navbar(props) {
                 mb={{ base: 5, md: 0 }}
             >
                 <Box>
+                    <Link as={RouterLink} to={"/library"}>
+                        Library
+                    </Link>
+                </Box>
+                <Box>
                     <Link as={RouterLink} to={"/contact"}>
                         Contact
                     </Link>
