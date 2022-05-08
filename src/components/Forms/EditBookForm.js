@@ -141,7 +141,7 @@ export default function EditBookForm(props) {
                                         <FormLabel htmlFor='read'>
                                             <HStack>
                                                 <p>Read by me</p>
-                                                <Checkbox {...field} id='read' />
+                                                <Checkbox {...field} id='read' defaultChecked={book.read}/>
                                             </HStack>
                                         </FormLabel>
                                     </FormControl>
