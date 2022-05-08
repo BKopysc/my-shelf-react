@@ -58,7 +58,7 @@ function Library(props) {
                                 {books.length > 0 ? (
                                     <Box>
                                         <Box>
-                                            <Button colorScheme={"teal"} onClick={addBook}>Add new book</Button>
+                                            <Button colorScheme={"teal"} onClick={addBook}>+ Add new book</Button>
                                         </Box>
                                         <Box mt={10} ml={20} mr={20}>
                                             <Books userBooks={books} />

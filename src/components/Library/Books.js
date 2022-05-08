@@ -1,6 +1,11 @@
-import { Box, Heading, Alert, AlertIcon, VStack, HStack, Flex, TableContainer, Table, TableCaption, Thead, Tr, Th, Tbody, Td, Tfoot, Button ,
-InputGroup, InputLeftAddon, Input} from "@chakra-ui/react";
+import {
+    Box, Heading, Alert, AlertIcon, VStack, HStack, Flex, TableContainer, Table, TableCaption, Thead, Tr, Th, Tbody, Td, Tfoot, Button,
+    InputGroup, InputLeftAddon, Input
+} from "@chakra-ui/react";
 import { useState } from "react";
+import XMLExport from "../Tools/XMLExport";
+
+
 
 export default function Books(props) {
 
@@ -14,20 +19,27 @@ export default function Books(props) {
         var newBooks = [];
 
         currentBooks.forEach(element => {
-            if(element.author.toLowerCase().includes(input_val.toLowerCase())){
+            if (element.author.toLowerCase().includes(input_val.toLowerCase())) {
                 //console.log(element.author);
                 newBooks.push(element);
             }
-            else if(element.title.toLowerCase().includes(input_val.toLowerCase())){
+            else if (element.title.toLowerCase().includes(input_val.toLowerCase())) {
                 newBooks.push(element);
             }
-            else if(element.genre.toLowerCase().includes(input_val.toLowerCase())){
+            else if (element.genre.toLowerCase().includes(input_val.toLowerCase())) {
                 newBooks.push(element);
             }
         });
         //console.log(input_val);
-        console.log(newBooks);
+        console.log(JSON.stringify(newBooks));
         setBookState(newBooks);
+    }
+
+    function exportData() {
+
+        
+
+        
     }
 
     const mappedBooks = bookState.map((book) =>
@@ -56,8 +68,8 @@ export default function Books(props) {
         <Box>
             <InputGroup pb={5}>
                 <InputLeftAddon children='🔍' />
-                <Input placeholder='keyword (author, title, genre)' onChange={handleInput} />
-                <Button colorScheme={'blue'} ml={10}>Export results</Button>
+                <Input placeholder='keyword (author, title, genre)' onChange={handleInput} mr={10} />
+                <XMLExport data={bookState} fileName={"books"+Date.now()}/>
             </InputGroup>
 
             <TableContainer>
