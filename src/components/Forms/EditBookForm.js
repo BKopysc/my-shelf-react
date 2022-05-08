@@ -59,12 +59,12 @@ export default function EditBookForm(props) {
     }, []);
 
     function handleSubmit(val, actions) {
-        var lib_id = AuthService.getCurrentUser().libraryId;
+        //var lib_id = AuthService.getCurrentUser().libraryId;
         DataService.putBook(props.lib_id, props.bid, val).
             then(() => {
                 //props.setGlobalMessage("Hi! Have a wonderful day 😊");
                 makeToast();
-                navigate(`/library/${lib_id}`);
+                navigate(`/library/${props.lib_id}`);
                 //window.location.reload();
             },
                 (error) => {
@@ -77,6 +77,7 @@ export default function EditBookForm(props) {
                     setLoading(false);
                     setMessage(resMessage);
                     setError(true);
+                    alert(resMessage)
                     actions.setSubmitting(false);
                 }
             );
