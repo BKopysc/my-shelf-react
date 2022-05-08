@@ -4,8 +4,8 @@ import AuthService from "./auth.service";
 
 const API_URL = "http://localhost:8080/api/data/";
 
-const getUserLibrary = () => {
-    var lib_id = AuthService.getCurrentUser().libraryId;
+const getLibrary = (lib_id) => {
+    //var lib_id = AuthService.getCurrentUser().libraryId;
     return axios.get(API_URL + "libraries/" + lib_id, {headers: authHeader() });
 }
 
@@ -26,6 +26,6 @@ const DataService = {
   getUserBoard,
   getModeratorBoard,
   getAdminBoard,
-  getUserLibrary
+  getLibrary
 };
 export default DataService;

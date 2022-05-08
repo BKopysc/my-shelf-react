@@ -1,6 +1,6 @@
 import {
     Box, Heading, Alert, AlertIcon, VStack, HStack, Flex, TableContainer, Table, TableCaption, Thead, Tr, Th, Tbody, Td, Tfoot, Button,
-    InputGroup, InputLeftAddon, Input
+    InputGroup, InputLeftAddon, Input, SimpleGrid, Text
 } from "@chakra-ui/react";
 import { useState } from "react";
 import XMLExport from "../Tools/XMLExport";
@@ -37,9 +37,9 @@ export default function Books(props) {
 
     function exportData() {
 
-        
 
-        
+
+
     }
 
     const mappedBooks = bookState.map((book) =>
@@ -62,6 +62,43 @@ export default function Books(props) {
         </Tr>
     );
 
+    const test = [1, 2, 3, 4, 5, 6]
+    const gridBooks = bookState.map((book) =>
+        <Box backgroundColor="#e6f2ee" border={"1px"} borderColor={"teal"} rounded={"lg"} width="250px" height='300px' position={"relative"}>
+            <Box position={"absolute"} top="2" right="2">
+                <Button width={5} height={8} mr={2} variant={"ghost"} colorScheme="teal">
+                    ✏️
+                </Button>
+            </Box>
+
+            <VStack mt={5}>
+                <Text fontSize={20} fontWeight={"bold"} width="200px">{book.title}</Text>
+                <Text width="200px">{book.author}</Text>
+                <Text fontStyle={"italic"}>{book.genre}</Text>
+                <Box width="200px" pt="20px">
+                    <Text>"{book.description}"</Text>
+                </Box>
+            </VStack>
+            <Text position={"absolute"} bottom={"5"} left="5">
+                {book.read ? (
+                    <p>Read</p>
+                ) : (
+                    <p>Not read</p>
+                )}
+                
+                </Text>
+            <Box position={"absolute"} bottom={"5"} right="5">
+                <Button width={8} height={8} mr={2} colorScheme="teal">
+                    ⭐
+                </Button>
+                <Button width={8} height={8} colorScheme="teal">
+                    ❌
+                </Button>
+            </Box>
+
+        </Box>
+    )
+
     //console.log(props.userBooks[0].read);
 
     return (
@@ -69,10 +106,12 @@ export default function Books(props) {
             <InputGroup pb={5}>
                 <InputLeftAddon children='🔍' />
                 <Input placeholder='keyword (author, title, genre)' onChange={handleInput} mr={10} />
-                <XMLExport data={bookState} fileName={"books"+Date.now()}/>
+                <XMLExport data={bookState} fileName={"books" + Date.now()} />
             </InputGroup>
-
-            <TableContainer>
+            <SimpleGrid spacing='40px' columns={{ sm: 2, md: 4 }}>
+                {gridBooks}
+            </SimpleGrid>
+            {/* <TableContainer>
                 <Table colorScheme='teal' size='md'>
                     <TableCaption>Books collection</TableCaption>
                     <Thead>
@@ -89,7 +128,7 @@ export default function Books(props) {
                         {mappedBooks}
                     </Tbody>
                 </Table>
-            </TableContainer>
+            </TableContainer> */}
         </Box>
     );
 }

@@ -33,7 +33,7 @@ function LoginForm(props) {
             .then(
                 () => {
                     props.setGlobalMessage("Hi! Have a wonderful day 😊");
-                    navigate("/library");
+                    navigate(`/library/${AuthService.getCurrentUser().libraryId}`);
                     //window.location.reload();
                 },
                 (error) => {

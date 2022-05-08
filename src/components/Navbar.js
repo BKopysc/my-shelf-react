@@ -72,11 +72,21 @@ function Navbar(props) {
                 spacing={{ base: 3, md: 7 }}
                 mb={{ base: 5, md: 0 }}
             >
+                {user ? (
                 <Box>
-                    <Link as={RouterLink} to={"/library"}>
-                        Library
+                    <Link as={RouterLink} to={`/library/${user.libraryId}`}>
+                        Your Library
+                    </Link>
+                </Box>) 
+                : 
+                (<></>)}
+                
+                <Box>
+                    <Link as={RouterLink} to={`/find-library`}>
+                        Find library
                     </Link>
                 </Box>
+
                 <Box>
                     <Link as={RouterLink} to={"/contact"}>
                         Contact

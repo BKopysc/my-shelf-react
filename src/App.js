@@ -13,6 +13,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import AuthService from './services/auth.service';
 import Library from './components/Library';
+import AddBook from './components/AddBook';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -65,8 +66,9 @@ function App() {
           <Route path="/help" element={<Help />} />
           <Route path="/login" element={<Login setGlobalMessage={setGlobalMessage} />} />
           <Route path="/register" element={<Register setGlobalMessage={setGlobalMessage}/>} />
-          <Route path="/library" element={<Library /> } />
+          <Route path="/library/:id" element={<Library /> } />
           <Route path="/profile" element={<Profile/>} />
+          <Route path="/books/new-book" element={<AddBook/>} />
         </Routes>
       </Box>
     </div>

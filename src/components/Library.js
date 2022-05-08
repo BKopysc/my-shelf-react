@@ -1,6 +1,6 @@
 import { Box, Heading, Alert, AlertIcon, VStack, HStack, Flex, Tabs, TabList, Tab, TabPanel, TabPanels, Button, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import AuthService from "../services/auth.service";
 import DataService from "../services/data.service";
 import Books from "./Library/Books";
@@ -9,14 +9,25 @@ function Library(props) {
 
     const [books, setBooks] = useState([]);
     const [films, setFilms] = useState([]);
-    const [privacy, setPrivacy] = useState();
+    const [privacy, setPrivacy] = useState(false);
+    const [isOwner, setIsOwner] = useState();
+    const { id } = useParams();
 
     let navigate = useNavigate();
     var currentUser = AuthService.getCurrentUser();
 
     const retrieveLibrary = () => {
+        var ow = false;
+
         if (currentUser) {
-            DataService.getUserLibrary().then(response => {
+            if (currentUser.libraryId == id) {
+                setIsOwner(true);
+                ow = true;
+            }
+        }
+
+        if (true) {
+            DataService.getLibrary(id).then(response => {
                 setBooks(response.data.books);
                 setPrivacy(response.data.isPrivate);
                 console.log(response.data.books);
@@ -27,8 +38,8 @@ function Library(props) {
         }
     }
 
-    const addBook = () =>{
-        navigate("/books/new");
+    const addBook = () => {
+        navigate("/books/new-book");
     }
 
     const addFilm = () => {
@@ -41,7 +52,7 @@ function Library(props) {
 
     return (
         <Box>
-            {currentUser ?
+            {!privacy ?
                 (<Box>
                     <Heading mt={5}>Library</Heading>
                     {/* <Box mt={10}>
@@ -55,26 +66,31 @@ function Library(props) {
 
                         <TabPanels>
                             <TabPanel>
+
                                 {books.length > 0 ? (
                                     <Box>
-                                        <Box>
-                                            <Button colorScheme={"teal"} onClick={addBook}>+ Add new book</Button>
-                                        </Box>
+                                        {isOwner ? (
+                                            <Box>
+                                                <Button colorScheme={"teal"} onClick={addBook}>+ Add new book</Button>
+                                            </Box>
+                                            ) : (<></>)}
                                         <Box mt={10} ml={20} mr={20}>
-                                            <Books userBooks={books} />
+                                            <Books userBooks={books} isOwner={isOwner} />
                                         </Box>
                                     </Box>
                                 ) : (
                                     <Box mt={10}>
                                         <Text fontSize={"25"} fontStyle={"italic"} fontWeight={"light"}>A room without books is like a body without a soul</Text>
+                                        {isOwner ? (
                                         <Box mt={5}>
-                                        <Button colorScheme={"teal"} fontSize={"15"} onClick={addBook}>+ Add new 📕 ! </Button>
+                                            <Button colorScheme={"teal"} fontSize={"15"} onClick={addBook}>+ Add new 📕 ! </Button>
                                         </Box>
+                                        ) : (<></>)}
                                     </Box>
                                 )}
                             </TabPanel>
                             <TabPanel>
-                            {films.length > 0 ? (
+                                {films.length > 0 ? (
                                     <Box>
                                         <Box>
                                             <Button colorScheme={"teal"}>Add new film</Button>
@@ -87,7 +103,7 @@ function Library(props) {
                                     <Box mt={10}>
                                         <Text fontSize={"25"} fontStyle={"italic"} fontWeight={"light"}>We are the movies and the movies are us</Text>
                                         <Box mt={5}>
-                                        <Button colorScheme={"teal"} fontSize={"15"}>+ Add new 🎬 ! </Button>
+                                            <Button colorScheme={"teal"} fontSize={"15"}>+ Add new 🎬 ! </Button>
                                         </Box>
                                     </Box>
                                 )}
