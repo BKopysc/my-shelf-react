@@ -18,6 +18,7 @@ export default function NewBookForm() {
     const { id } = useParams();
     const toast = useToast()
 
+
     function validateField(value) {
         let error
         if (!value) {
@@ -131,6 +132,17 @@ export default function NewBookForm() {
                                 <AlertDescription>{message}</AlertDescription>
                             </Alert> : ""}
                         </Box>
+
+                        <Button
+                            mt={4}
+                            mr={5}
+                            width={100}
+                            colorScheme='red'
+                            isLoading={props.isSubmitting}
+                            onClick={() => {navigate(`/library/${id}`);}}
+                        >
+                            Cancel
+                        </Button>
                         <Button
                             mt={4}
                             width={100}
