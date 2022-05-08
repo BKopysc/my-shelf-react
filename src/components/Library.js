@@ -39,7 +39,7 @@ function Library(props) {
     }
 
     const addBook = () => {
-        navigate("/books/new-book");
+        navigate(`/library/${currentUser.libraryId}/new-book`);
     }
 
     const addFilm = () => {

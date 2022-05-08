@@ -9,6 +9,14 @@ const getLibrary = (lib_id) => {
     return axios.get(API_URL + "libraries/" + lib_id, {headers: authHeader() });
 }
 
+const postBook = (lib_id, book_json) => {
+  return axios
+  .post(API_URL + "libraries/" + lib_id + "/books", book_json, {headers: authHeader()})
+  .then((response) => {
+    return response.data; 
+  });
+}
+
 const getPublicContent = () => {
   return axios.get(API_URL + "all");
 };
@@ -26,6 +34,7 @@ const DataService = {
   getUserBoard,
   getModeratorBoard,
   getAdminBoard,
-  getLibrary
+  getLibrary,
+  postBook
 };
 export default DataService;

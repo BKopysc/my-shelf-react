@@ -68,7 +68,7 @@ function App() {
           <Route path="/register" element={<Register setGlobalMessage={setGlobalMessage}/>} />
           <Route path="/library/:id" element={<Library /> } />
           <Route path="/profile" element={<Profile/>} />
-          <Route path="/books/new-book" element={<AddBook/>} />
+          <Route path="/library/:id/new-book" element={<AddBook/>} />
         </Routes>
       </Box>
     </div>
