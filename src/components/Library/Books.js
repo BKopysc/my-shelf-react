@@ -3,7 +3,9 @@ import {
     InputGroup, InputLeftAddon, Input, SimpleGrid, Text
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { Link as RouterLink, Navigate, useNavigate } from "react-router-dom";
 import XMLExport from "../Tools/XMLExport";
+import { makeSuccessToast } from "../Tools/GlobalToast";
 
 
 
@@ -11,6 +13,8 @@ export default function Books(props) {
 
     const [searchInput, setSearchInput] = useState();
     const [bookState, setBookState] = useState(props.userBooks);
+    
+
 
     function handleInput(event) {
         var input_val = event.target.value;
@@ -33,13 +37,6 @@ export default function Books(props) {
         //console.log(input_val);
         console.log(JSON.stringify(newBooks));
         setBookState(newBooks);
-    }
-
-    function exportData() {
-
-
-
-
     }
 
     const mappedBooks = bookState.map((book) =>
@@ -66,7 +63,8 @@ export default function Books(props) {
     const gridBooks = bookState.map((book) =>
         <Box backgroundColor="#e6f2ee" border={"1px"} borderColor={"teal"} rounded={"lg"} width="250px" height='300px' position={"relative"}>
             <Box position={"absolute"} top="2" right="2">
-                <Button width={5} height={8} mr={2} variant={"ghost"} colorScheme="teal">
+                <Button width={5} height={8} mr={2} variant={"ghost"} colorScheme="teal"
+                as={RouterLink} to={`/library/${props.lib_id}/edit-book/${book.id}`}>
                     ✏️
                 </Button>
             </Box>
@@ -79,19 +77,20 @@ export default function Books(props) {
                     <Text>"{book.description}"</Text>
                 </Box>
             </VStack>
-            <Text position={"absolute"} bottom={"5"} left="5">
-                {book.read ? (
-                    <p>Read</p>
+
+            {book.read ? (
+                                <Text position={"absolute"} bottom={"5"} left="5">Read</Text>
                 ) : (
-                    <p>Not read</p>
+                    <Text position={"absolute"} bottom={"5"} left="5">Not Read</Text>
                 )}
-                
-                </Text>
+
+           
             <Box position={"absolute"} bottom={"5"} right="5">
-                <Button width={8} height={8} mr={2} colorScheme="teal">
+                <Button width={8} height={8} mr={2} colorScheme="teal" variant={"outline"}>
                     ⭐
                 </Button>
-                <Button width={8} height={8} colorScheme="teal">
+                <Button width={8} height={8} colorScheme="teal"  variant={"outline"} 
+                onClick={() => props.deleteCurrentBook(book.id)}>
                     ❌
                 </Button>
             </Box>
@@ -111,24 +110,6 @@ export default function Books(props) {
             <SimpleGrid spacing='40px' columns={{ sm: 2, md: 4 }}>
                 {gridBooks}
             </SimpleGrid>
-            {/* <TableContainer>
-                <Table colorScheme='teal' size='md'>
-                    <TableCaption>Books collection</TableCaption>
-                    <Thead>
-                        <Tr>
-                            <Th>Title</Th>
-                            <Th>Author</Th>
-                            <Th>Genre</Th>
-                            <Th>Description</Th>
-                            <Th>Is read?</Th>
-                            <Th>Actions</Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {mappedBooks}
-                    </Tbody>
-                </Table>
-            </TableContainer> */}
         </Box>
     );
 }

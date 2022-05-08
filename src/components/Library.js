@@ -1,9 +1,11 @@
-import { Box, Heading, Alert, AlertIcon, VStack, HStack, Flex, Tabs, TabList, Tab, TabPanel, TabPanels, Button, Text } from "@chakra-ui/react";
+import { Box, Heading, Alert, AlertIcon, VStack, HStack, Flex, Tabs, TabList, Tab, TabPanel, TabPanels, Button, Text, useToast, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import AuthService from "../services/auth.service";
 import DataService from "../services/data.service";
 import Books from "./Library/Books";
+import GlobalToast from "./Tools/GlobalToast";
+import CustomModal from "./Tools/CustomModal";
 
 function Library(props) {
 
@@ -11,21 +13,25 @@ function Library(props) {
     const [films, setFilms] = useState([]);
     const [privacy, setPrivacy] = useState(false);
     const [isOwner, setIsOwner] = useState();
+    const [modalTitle, setModalTitle] = useState(false);
+    const [modalContent, setModalContent] = useState(false);
+    const [idToDelete, setIdToDelete] = useState(undefined);
+
     const { id } = useParams();
+    const toast = useToast();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     let navigate = useNavigate();
     var currentUser = AuthService.getCurrentUser();
 
     const retrieveLibrary = () => {
         var ow = false;
-
         if (currentUser) {
             if (currentUser.libraryId == id) {
                 setIsOwner(true);
                 ow = true;
             }
         }
-
         if (true) {
             DataService.getLibrary(id).then(response => {
                 setBooks(response.data.books);
@@ -42,6 +48,43 @@ function Library(props) {
         navigate(`/library/${currentUser.libraryId}/new-book`);
     }
 
+
+    const deleteOneBook = () => {
+          DataService.deleteBook(id, idToDelete).then(() => {
+            GlobalToast.makeSuccToast("Book deleted!", toast);
+            var new_books = books.splice(books.findIndex(function(i){ return i.id === idToDelete;}), 1);
+            setBooks(new_books);
+            setIdToDelete(undefined);
+        },
+            (error) => {
+                const resMessage =
+                    (error.response &&
+                        error.response.data &&
+                        error.response.data.message) ||
+                    error.message ||
+                    error.toString();
+                    alert(resMessage);
+            }
+        );
+    }
+
+    const confirmDelete = () => {
+        onClose();
+        deleteOneBook();
+    }
+
+    const rejectDelete = () => {
+        onClose();
+        setIdToDelete(undefined);
+    }
+
+    const deleteCurrentBook = (book_id) => {
+        onOpen();
+        setModalTitle("Delete book")
+        setModalContent("Are you sure?")
+        setIdToDelete(book_id);
+    }
+
     const addFilm = () => {
         navigate("/films/new");
     }
@@ -52,12 +95,17 @@ function Library(props) {
 
     return (
         <Box>
+            <CustomModal onOpen={onOpen} onClose={onClose} isOpen={isOpen} title={modalTitle} content={modalContent}
+            confirmDelete={confirmDelete} rejectDelete={rejectDelete}
+            >
+            </CustomModal>
             {!privacy ?
                 (<Box>
                     <Heading mt={5}>Library</Heading>
                     {/* <Box mt={10}>
                         {mappedBooks}
                     </Box> */}
+
                     <Tabs ml={10} mr={10}>
                         <TabList>
                             <Tab>Books</Tab>
@@ -75,7 +123,7 @@ function Library(props) {
                                             </Box>
                                             ) : (<></>)}
                                         <Box mt={10} ml={20} mr={20}>
-                                            <Books userBooks={books} isOwner={isOwner} />
+                                            <Books userBooks={books} isOwner={isOwner} lib_id={id} deleteCurrentBook={deleteCurrentBook}/>
                                         </Box>
                                     </Box>
                                 ) : (

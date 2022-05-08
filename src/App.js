@@ -14,6 +14,7 @@ import Register from './components/Register';
 import AuthService from './services/auth.service';
 import Library from './components/Library';
 import AddBook from './components/AddBook';
+import EditBook from './components/EditBook';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -69,6 +70,7 @@ function App() {
           <Route path="/library/:id" element={<Library /> } />
           <Route path="/profile" element={<Profile/>} />
           <Route path="/library/:id/new-book" element={<AddBook/>} />
+          <Route path="/library/:id/edit-book/:bid" element={<EditBook/>} />
         </Routes>
       </Box>
     </div>

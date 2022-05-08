@@ -17,6 +17,19 @@ const postBook = (lib_id, book_json) => {
   });
 }
 
+const deleteBook = (lib_id, book_id) => {
+  // alert(lib_id + " " + book_id)
+  return axios
+  .delete(API_URL + "libraries/" + lib_id + "/books/" + book_id,{headers: authHeader()})
+  .then((response) => {
+    return response.data; 
+  });
+}
+
+const getBook = (lib_id, book_id) => {
+  return axios.get(API_URL + "libraries/" + lib_id + "/books/" + book_id, {headers: authHeader() });
+}
+
 const getPublicContent = () => {
   return axios.get(API_URL + "all");
 };
@@ -35,6 +48,8 @@ const DataService = {
   getModeratorBoard,
   getAdminBoard,
   getLibrary,
-  postBook
+  postBook,
+  deleteBook,
+  getBook
 };
 export default DataService;
