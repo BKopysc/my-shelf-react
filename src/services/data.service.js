@@ -17,6 +17,14 @@ const postBook = (lib_id, book_json) => {
   });
 }
 
+const putBook = (lib_id, book_id, book_json) => {
+  return axios
+  .put(API_URL + "libraries/" + lib_id + "/books/" + book_id, book_json, {headers: authHeader()})
+  .then((response) => {
+    return response.data; 
+  });
+}
+
 const deleteBook = (lib_id, book_id) => {
   // alert(lib_id + " " + book_id)
   return axios
@@ -50,6 +58,7 @@ const DataService = {
   getLibrary,
   postBook,
   deleteBook,
-  getBook
+  getBook,
+  putBook
 };
 export default DataService;
