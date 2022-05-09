@@ -1,11 +1,13 @@
 import {
     Box, Heading, Alert, AlertIcon, VStack, HStack, Flex, TableContainer, Table, TableCaption, Thead, Tr, Th, Tbody, Td, Tfoot, Button,
-    InputGroup, InputLeftAddon, Input, SimpleGrid, Text
+    InputGroup, InputLeftAddon, Input, SimpleGrid, Text, useDisclosure
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { Link as RouterLink, Navigate, useNavigate } from "react-router-dom";
 import XMLExport from "../Tools/XMLExport";
 import { makeSuccessToast } from "../Tools/GlobalToast";
+import BookReviewModal from "./BookReviewModal";
+import DataService from "../../services/data.service";
 
 
 
@@ -13,7 +15,30 @@ export default function Books(props) {
 
     const [searchInput, setSearchInput] = useState();
     const [bookState, setBookState] = useState(props.userBooks);
-    
+    const [bookId, setBookId] = useState();
+    const [bookReview, setBookReview] = useState(undefined);
+    const [loading, setLoading] = useState(true);
+
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    function recieveData(lib_id, book_id) {
+        if (true) {
+            DataService.getBookReview(lib_id, book_id).then(response => {
+                setBookReview(response.data);
+                setLoading(false);
+                console.log(response.data);
+            })
+                .catch(e => {
+                    alert(e);
+                })
+        }
+    }
+
+    function getReview(id) {
+        setBookId(id);
+        recieveData(props.lib_id, id);
+        onOpen();
+    }    
 
 
     function handleInput(event) {
@@ -86,7 +111,8 @@ export default function Books(props) {
 
            
             <Box position={"absolute"} bottom={"5"} right="5">
-                <Button width={8} height={8} mr={2} colorScheme="teal" variant={"outline"}>
+                <Button width={8} height={8} mr={2} colorScheme="teal" variant={"outline"}
+                onClick={() => getReview(book.id)} >
                     ⭐
                 </Button>
                 <Button width={8} height={8} colorScheme="teal"  variant={"outline"} 
@@ -102,6 +128,8 @@ export default function Books(props) {
 
     return (
         <Box>
+            <BookReviewModal onOpen={onOpen} onClose={onClose} isOpen={isOpen} bookId={bookId} lib_id={props.lib_id} 
+            bookReview={bookReview} loading={loading}/>
             <InputGroup pb={5}>
                 <InputLeftAddon children='🔍' />
                 <Input placeholder='keyword (author, title, genre)' onChange={handleInput} mr={10} />
