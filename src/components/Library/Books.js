@@ -1,6 +1,6 @@
 import {
     Box, Heading, Alert, AlertIcon, VStack, HStack, Flex, TableContainer, Table, TableCaption, Thead, Tr, Th, Tbody, Td, Tfoot, Button,
-    InputGroup, InputLeftAddon, Input, SimpleGrid, Text, useDisclosure
+    InputGroup, InputLeftAddon, Input, SimpleGrid, Text, useDisclosure, useToast
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { Link as RouterLink, Navigate, useNavigate } from "react-router-dom";
@@ -8,6 +8,7 @@ import XMLExport from "../Tools/XMLExport";
 import { makeSuccessToast } from "../Tools/GlobalToast";
 import BookReviewModal from "./BookReviewModal";
 import DataService from "../../services/data.service";
+import AuthService from "../../services/auth.service";
 
 
 
@@ -18,13 +19,32 @@ export default function Books(props) {
     const [bookId, setBookId] = useState();
     const [bookReview, setBookReview] = useState(undefined);
     const [loading, setLoading] = useState(true);
+    const [shouldEditModal, setShouldEditModal] = useState(false);
+    const [isOwner, setOwner] = useState(AuthService.getCurrentUser());
+
+    const toast = useToast();
+
+    const makeToast = (text) => {
+        toast({
+            title: text,
+            description: 'Check your library!',
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+        })
+    }
 
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-    function recieveData(lib_id, book_id) {
+    function recieveReviewData(lib_id, book_id) {
         if (true) {
             DataService.getBookReview(lib_id, book_id).then(response => {
+                if (response.data.title == null) {
+                    response.data.title = "";
+                    response.data.text = ""
+                }
                 setBookReview(response.data);
+                setShouldEditModal(false);
                 setLoading(false);
                 console.log(response.data);
             })
@@ -34,12 +54,29 @@ export default function Books(props) {
         }
     }
 
+    function deleteBookReview(bookId){
+        if (true) {
+            DataService.deleteBookReview(props.lib_id, bookId).then(response => {
+                onClose();
+                makeToast("Book review deleted!");
+            })
+                .catch(e => {
+                    alert(e);
+                })
+        }
+}
+
     function getReview(id) {
         setBookId(id);
-        recieveData(props.lib_id, id);
+        recieveReviewData(props.lib_id, id);
+        setShouldEditModal(false);
         onOpen();
-    }    
+    }
 
+
+    function closeModal() {
+        onClose();
+    }
 
     function handleInput(event) {
         var input_val = event.target.value;
@@ -87,12 +124,18 @@ export default function Books(props) {
     const test = [1, 2, 3, 4, 5, 6]
     const gridBooks = bookState.map((book) =>
         <Box backgroundColor="#e6f2ee" border={"1px"} borderColor={"teal"} rounded={"lg"} width="250px" height='300px' position={"relative"}>
-            <Box position={"absolute"} top="2" right="2">
-                <Button width={5} height={8} mr={2} variant={"ghost"} colorScheme="teal"
-                as={RouterLink} to={`/library/${props.lib_id}/edit-book/${book.id}`}>
-                    ✏️
-                </Button>
-            </Box>
+            {isOwner && isOwner.libraryId == props.lib_id ? (
+                <Box position={"absolute"} top="2" right="2">
+
+                    <Button width={5} height={8} mr={2} variant={"ghost"} colorScheme="teal"
+                        as={RouterLink} to={`/library/${props.lib_id}/edit-book/${book.id}`}>
+                        ✏️
+                    </Button>
+                </Box>
+            ) : (
+                <Box>
+                </Box>
+            )}
 
             <VStack mt={5}>
                 <Text fontSize={20} fontWeight={"bold"} width="200px">{book.title}</Text>
@@ -104,21 +147,25 @@ export default function Books(props) {
             </VStack>
 
             {book.read ? (
-                                <Text position={"absolute"} bottom={"5"} left="5">Read</Text>
-                ) : (
-                    <Text position={"absolute"} bottom={"5"} left="5">Not Read</Text>
-                )}
+                <Text position={"absolute"} bottom={"5"} left="5">Read</Text>
+            ) : (
+                <Text position={"absolute"} bottom={"5"} left="5">Not Read</Text>
+            )}
 
-           
+
             <Box position={"absolute"} bottom={"5"} right="5">
                 <Button width={8} height={8} mr={2} colorScheme="teal" variant={"outline"}
-                onClick={() => getReview(book.id)} >
+                    onClick={() => getReview(book.id)} >
                     ⭐
                 </Button>
-                <Button width={8} height={8} colorScheme="teal"  variant={"outline"} 
-                onClick={() => props.deleteCurrentBook(book.id)}>
-                    ❌
-                </Button>
+                {isOwner && isOwner.libraryId == props.lib_id ? (
+                    <Button width={8} height={8} colorScheme="teal" variant={"outline"}
+                        onClick={() => props.deleteCurrentBook(book.id)}>
+                        ❌
+                    </Button>
+                ) : (
+                    <Box />
+                )}
             </Box>
 
         </Box>
@@ -128,8 +175,9 @@ export default function Books(props) {
 
     return (
         <Box>
-            <BookReviewModal onOpen={onOpen} onClose={onClose} isOpen={isOpen} bookId={bookId} lib_id={props.lib_id} 
-            bookReview={bookReview} loading={loading}/>
+            <BookReviewModal onOpen={onOpen} onClose={onClose} isOpen={isOpen} bookId={bookId} lib_id={props.lib_id}
+                bookReview={bookReview} loading={loading} recieveReviewData={recieveReviewData} closeModal={closeModal}
+                setShouldEditModal={setShouldEditModal} shouldEditModal={shouldEditModal} isOwner={isOwner} deleteBookReview={deleteBookReview}/>
             <InputGroup pb={5}>
                 <InputLeftAddon children='🔍' />
                 <Input placeholder='keyword (author, title, genre)' onChange={handleInput} mr={10} />

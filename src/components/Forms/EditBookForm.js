@@ -23,6 +23,25 @@ export default function EditBookForm(props) {
         return error
     }
 
+    function validateGenre(value){
+        let error
+        if (!value) {
+            error = 'This field is required'
+        } else if (value.length > 15) {
+            error = "Max. 15 chars!"
+          }
+        return error
+    }
+    function validateDescription(value) {
+        let error
+        if (!value) {
+            error = 'This field is required'
+        } else if (value.length > 30) {
+            error = "Max. 30 chars!"
+          }
+        return error
+    }
+
     const makeToast = () => {
         toast({
             title: 'Book edited!',
@@ -116,7 +135,7 @@ export default function EditBookForm(props) {
                                 )}
                             </Field>
                             <br />
-                            <Field name='genre' validate={validateField}>
+                            <Field name='genre' validate={validateGenre}>
                                 {({ field, form }) => (
                                     <FormControl isInvalid={form.errors.genre && form.touched.genre}>
                                         <FormLabel htmlFor='genre'>Genre</FormLabel>
@@ -126,7 +145,7 @@ export default function EditBookForm(props) {
                                 )}
                             </Field>
                             <br />
-                            <Field name='description' validate={validateField}>
+                            <Field name='description' validate={validateDescription}>
                                 {({ field, form }) => (
                                     <FormControl isInvalid={form.errors.description && form.touched.description}>
                                         <FormLabel htmlFor='description'>Description</FormLabel>

@@ -1,4 +1,8 @@
-import { FormControl, FormLabel, Input, FormErrorMessage, Button, Box, Alert, AlertIcon, AlertTitle, AlertDescription, Checkbox, HStack, useToast } from "@chakra-ui/react"
+import {
+    FormControl, FormLabel, Input, FormErrorMessage, Button, Box, Alert, AlertIcon, AlertTitle, AlertDescription,
+    Checkbox, HStack, useToast, NumberInputField, NumberIncrementStepper, NumberDecrementStepper, NumberInput, NumberInputStepper,
+    Textarea
+} from "@chakra-ui/react"
 import { Formik, Form, Field } from 'formik';
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
@@ -11,7 +15,7 @@ export default function EditBookReviewForm(props) {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [isError, setError] = useState(false);
-    const [book, setBook] = useState(undefined);
+    const [review, setReview] = useState(props.review);
     const { id } = useParams();
     const toast = useToast();
 
@@ -25,7 +29,7 @@ export default function EditBookReviewForm(props) {
 
     const makeToast = () => {
         toast({
-            title: 'Book edited!',
+            title: 'Book review added!',
             description: 'Check your library!',
             status: 'success',
             duration: 3000,
@@ -60,11 +64,15 @@ export default function EditBookReviewForm(props) {
 
     function handleSubmit(val, actions) {
         //var lib_id = AuthService.getCurrentUser().libraryId;
-        DataService.putBook(props.lib_id, props.bid, val).
+        //alert(JSON.stringify(val));
+
+        DataService.putBookReview(props.lib_id, props.bookId, val).
             then(() => {
                 //props.setGlobalMessage("Hi! Have a wonderful day 😊");
                 makeToast();
-                navigate(`/library/${props.lib_id}`);
+                actions.setSubmitting(false);
+                props.recieveReviewData(props.lib_id, props.bookId);
+                //navigate(`/library/${props.lib_id}`);
                 //window.location.reload();
             },
                 (error) => {
@@ -85,10 +93,13 @@ export default function EditBookReviewForm(props) {
 
 
     return (
-        <Box mt={10}>
+        <Box mt={1}>
             {props.review ? (
                 <Formik
-                    initialValues={{ title: props.review.title, text: props.review.text, shouldRead: props.review.shouldRead}}
+                    initialValues={{
+                        title: props.review.title, text: props.review.text, score: props.review.score,
+                        shouldRead: props.review.shouldRead, timeToRead: props.review.timeToRead
+                    }}
                     onSubmit={(values, actions) => {
                         console.log(values);
                         handleSubmit(values, actions);
@@ -109,26 +120,57 @@ export default function EditBookReviewForm(props) {
                             <Field name='text' validate={validateField}>
                                 {({ field, form }) => (
                                     <FormControl isInvalid={form.errors.text && form.touched.text}>
-                                        <FormLabel htmlFor='text'>text</FormLabel>
-                                        <Input {...field} id='text' placeholder='text' />
+                                        <FormLabel htmlFor='text'>Text:</FormLabel>
+                                        <Textarea {...field} id='text' placeholder='text' />
                                         <FormErrorMessage>{form.errors.text}</FormErrorMessage>
                                     </FormControl>
                                 )}
                             </Field>
                             <br />
-                        
-                            {/* <Field name='shouldRead' type="checkbox">
+                            <Field name='score' validate={validateField}>
+                                {({ field, form }) => (
+                                    <FormControl isInvalid={form.errors.score && form.touched.score}>
+                                        <FormLabel htmlFor='score'>Score (0-10):</FormLabel>
+                                        <NumberInput step={1} min={0} max={10} precision={0} {...field}>
+                                            <NumberInputField {...field} id="score" placeholder="score" />
+                                            <NumberInputStepper>
+                                                <NumberIncrementStepper />
+                                                <NumberDecrementStepper />
+                                            </NumberInputStepper>
+                                        </NumberInput>
+                                        <FormErrorMessage>{form.errors.score}</FormErrorMessage>
+                                    </FormControl>
+                                )}
+                            </Field>
+                            <br />
+                            <Field name='timeToRead' validate={validateField}>
+                                {({ field, form }) => (
+                                    <FormControl isInvalid={form.errors.timeToRead && form.touched.timeToRead}>
+                                        <FormLabel htmlFor='timeToRead'>Time to read (in hours):</FormLabel>
+                                        <NumberInput step={1} min={0} precision={0} {...field}>
+                                            <NumberInputField {...field} id="timeToRead" placeholder="time" />
+                                            <NumberInputStepper>
+                                                <NumberIncrementStepper />
+                                                <NumberDecrementStepper />
+                                            </NumberInputStepper>
+                                        </NumberInput>
+                                        <FormErrorMessage>{form.errors.timeToRead}</FormErrorMessage>
+                                    </FormControl>
+                                )}
+                            </Field>
+                            <br />
+                            <Field name='shouldRead' type="checkbox">
                                 {({ field, form }) => (
                                     <FormControl isInvalid={form.errors.shouldRead && form.touched.shouldRead}>
                                         <FormLabel htmlFor='shouldRead'>
                                             <HStack>
-                                                <p>Read by me</p>
-                                                <Checkbox {...field} id='shouldRead' defaultChecked={props.review.shouldRead}/>
+                                                <p>Recommended</p>
+                                                <Checkbox {...field} id='shouldRead' defaultChecked={review.shouldRead} />
                                             </HStack>
                                         </FormLabel>
                                     </FormControl>
                                 )}
-                            </Field> */}
+                            </Field>
                             <Box width="500px" mt={5}>
                                 {isError ? <Alert status='error'>
                                     <AlertIcon />
@@ -136,25 +178,26 @@ export default function EditBookReviewForm(props) {
                                     <AlertDescription>{message}</AlertDescription>
                                 </Alert> : ""}
                             </Box>
-                            <Button
-                            mt={4}
-                            mr={5}
-                            width={100}
-                            colorScheme='red'
-                            isLoading={props.isSubmitting}
-                            onClick={() => {navigate(`/library/${AuthService.getCurrentUser().libraryId}`);}}
-                        >
-                            Cancel
-                        </Button>
-                            <Button
-                                mt={4}
-                                width={100}
-                                colorScheme='teal'
-                                isLoading={props.isSubmitting}
-                                type='submit'
-                            >
-                                Edit book
-                            </Button>
+
+                            {!review.title ? (
+                                <Button
+                                    mt={4}
+                                    width={100}
+                                    colorScheme='green'
+                                    isLoading={props.isSubmitting}
+                                    type='submit'
+                                >Add review
+                                </Button>
+                            ) : (
+                                <Button
+                                    mt={4}
+                                    width={100}
+                                    colorScheme='green'
+                                    isLoading={props.isSubmitting}
+                                    type='submit'
+                                >Edit review
+                                </Button>
+                            )}
                         </Form>
 
                     )}

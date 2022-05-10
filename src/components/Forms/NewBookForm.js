@@ -27,6 +27,25 @@ export default function NewBookForm() {
         return error
     }
 
+    function validateGenre(value){
+        let error
+        if (!value) {
+            error = 'This field is required'
+        } else if (value.length > 15) {
+            error = "Max. 15 chars!"
+          }
+        return error
+    }
+    function validateDescription(value) {
+        let error
+        if (!value) {
+            error = 'This field is required'
+        } else if (value.length > 30) {
+            error = "Max. 30 chars!"
+          }
+        return error
+    }
+
     const makeToast = () =>{
         toast({
             title: 'Book added!',
@@ -86,27 +105,27 @@ export default function NewBookForm() {
                         <Field name='author' validate={validateField}>
                             {({ field, form }) => (
                                 <FormControl isInvalid={form.errors.author && form.touched.author}>
-                                    <FormLabel htmlFor='author'>Author</FormLabel>
+                                    <FormLabel htmlFor='author'>Author:</FormLabel>
                                     <Input {...field} id='author' placeholder='author' />
                                     <FormErrorMessage>{form.errors.author}</FormErrorMessage>
                                 </FormControl>
                             )}
                         </Field>
                         <br />
-                        <Field name='genre' validate={validateField}>
+                        <Field name='genre' validate={validateGenre}>
                             {({ field, form }) => (
                                 <FormControl isInvalid={form.errors.genre && form.touched.genre}>
-                                    <FormLabel htmlFor='genre'>Genre</FormLabel>
+                                    <FormLabel htmlFor='genre'>Genre:</FormLabel>
                                     <Input {...field} id='genre' placeholder='genre' />
                                     <FormErrorMessage>{form.errors.genre}</FormErrorMessage>
                                 </FormControl>
                             )}
                         </Field>
                         <br />
-                        <Field name='description' validate={validateField}>
+                        <Field name='description' validate={validateDescription}>
                             {({ field, form }) => (
                                 <FormControl isInvalid={form.errors.description && form.touched.description}>
-                                    <FormLabel htmlFor='description'>Description</FormLabel>
+                                    <FormLabel htmlFor='description'>Description:</FormLabel>
                                     <Input {...field} id='description' placeholder='description' />
                                     <FormErrorMessage>{form.errors.description}</FormErrorMessage>
                                 </FormControl>

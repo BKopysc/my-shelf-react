@@ -42,6 +42,23 @@ const getBookReview = (lib_id, book_id) => {
   return axios.get(API_URL + "libraries/" + lib_id + "/books/" + book_id + "/book_review", {headers: authHeader() });
 }
 
+const putBookReview = (lib_id, book_id, book_rev_json) => {
+  return axios
+  .put(API_URL + "libraries/" + lib_id + "/books/" + book_id + "/book_review", book_rev_json, {headers: authHeader()})
+  .then((response) => {
+    return response.data; 
+  });
+}
+
+const deleteBookReview = (lib_id, book_id) => {
+  // alert(lib_id + " " + book_id)
+  return axios
+  .delete(API_URL + "libraries/" + lib_id + "/books/" + book_id + "/book_review",{headers: authHeader()})
+  .then((response) => {
+    return response.data; 
+  });
+}
+
 const getPublicContent = () => {
   return axios.get(API_URL + "all");
 };
@@ -64,6 +81,8 @@ const DataService = {
   deleteBook,
   getBook,
   putBook,
-  getBookReview
+  getBookReview,
+  putBookReview,
+  deleteBookReview
 };
 export default DataService;
