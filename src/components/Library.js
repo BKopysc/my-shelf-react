@@ -101,7 +101,12 @@ function Library(props) {
             </CustomModal>
             {!privacy ?
                 (<Box>
-                    <Heading mt={5}>Library</Heading>
+                    
+                    <HStack mt={5} display={"flex"} alignItems={"center"} justifyContent={"center"}>
+                    <Heading>Library</Heading>
+                    </HStack>
+                    <Button mt={2} variant={"outline"} onClick={() => {navigator.clipboard.writeText(window.location.href)}}
+                    >Share 🔗</Button>
                     {/* <Box mt={10}>
                         {mappedBooks}
                     </Box> */}
