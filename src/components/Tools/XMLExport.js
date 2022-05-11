@@ -8,13 +8,14 @@ export default function XMLExport(props) {
     const data = props.data;   //dataForXml
     const fileName = props.fileName ? props.fileName : "exported";
     let fields = props.fields ? props.fields : [];  //fieldsAsObjects or fieldsAsStrings, empty list means "use all"
-    const exportType = 'xml';
-    exportFromJSON({data, fileName, fields, exportType})
+    const exportType = 'xls';
+    const withBOM = true;
+    exportFromJSON({data, fileName, fields, exportType, withBOM})
   }
 
   return (
     <Button onClick={onClick} colorScheme={"blue"}>
-      Export to XML
+      Export to XLS
     </Button>
   )
 

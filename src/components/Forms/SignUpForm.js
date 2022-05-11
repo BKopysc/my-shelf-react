@@ -101,7 +101,7 @@ function SignUpForm(props) {
                         <Field name='email' validate={validateEmail}>
                             {({ field, form }) => (
                                 <FormControl isInvalid={form.errors.email && form.touched.email}>
-                                    <FormLabel htmlFor='email'>Username</FormLabel>
+                                    <FormLabel htmlFor='email'>Email</FormLabel>
                                     <Input {...field} id='email' type="email" placeholder='email' />
                                     <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                                 </FormControl>

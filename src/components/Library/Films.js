@@ -166,7 +166,7 @@ export default function Films(props) {
                 <Input placeholder='keyword (director, title, genre)' onChange={handleInput} mr={10} />
                 <XMLExport data={filmState} fileName={"films" + Date.now()} />
             </InputGroup>
-            <SimpleGrid spacing='40px' columns={{ sm: 2, md: 3 }}>
+            <SimpleGrid spacing='40px' columns={{ sm: 2, md: 4 }}>
                 {gridFilms}
             </SimpleGrid>
         </Box>
