@@ -1,17 +1,18 @@
-import { FormControl, FormLabel, Input, FormErrorMessage, Button, Box, Alert, AlertIcon, AlertTitle, AlertDescription, Checkbox, HStack, useToast } from "@chakra-ui/react"
+import { FormControl, FormLabel, Input, FormErrorMessage, Button, Box, Alert, AlertIcon, AlertTitle, AlertDescription, Checkbox, HStack, useToast,
+    NumberInputField, NumberIncrementStepper, NumberDecrementStepper, NumberInput, NumberInputStepper } from "@chakra-ui/react"
 import { Formik, Form, Field } from 'formik';
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import DataService from "../../services/data.service";
 import AuthService from "../../services/auth.service";
 
-export default function EditBookForm(props) {
+export default function EditFilmForm(props) {
 
     let navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [isError, setError] = useState(false);
-    const [book, setBook] = useState(undefined);
+    const [film, setFilm] = useState(undefined);
     const { id } = useParams();
     const toast = useToast();
 
@@ -23,13 +24,13 @@ export default function EditBookForm(props) {
         return error
     }
 
-    function validateGenre(value){
+    function validateGenre(value) {
         let error
         if (!value) {
             error = 'This field is required'
         } else if (value.length > 15) {
             error = "Max. 15 chars!"
-          }
+        }
         return error
     }
     function validateDescription(value) {
@@ -38,13 +39,26 @@ export default function EditBookForm(props) {
             error = 'This field is required'
         } else if (value.length > 30) {
             error = "Max. 30 chars!"
-          }
+        }
         return error
     }
 
+    function validateYear(value){
+        let error
+        var date = new Date().getFullYear()
+        if (!value) {
+            error = 'This field is required'
+        } else if (value > date) {
+            error = "Max year: " + date;
+          }
+        return error
+        
+    }
+
+
     const makeToast = () => {
         toast({
-            title: 'Book edited!',
+            title: 'Film edited!',
             description: 'Check your library!',
             status: 'success',
             duration: 3000,
@@ -52,10 +66,10 @@ export default function EditBookForm(props) {
         })
     }
 
-    function retrieveBook() {
+    function retrieveFilm() {
         if (true) {
-            DataService.getBook(props.lib_id, props.bid).then(response => {
-                setBook(response.data);
+            DataService.getFilm(props.lib_id, props.fid).then(response => {
+                setFilm(response.data);
                 //alert(response.data);
                 //setPrivacy(response.data.isPrivate);
                 console.log(response.data);
@@ -67,12 +81,13 @@ export default function EditBookForm(props) {
     }
 
     useEffect(() => {
-        retrieveBook();
+        retrieveFilm();
     }, []);
 
     function handleSubmit(val, actions) {
         //var lib_id = AuthService.getCurrentUser().libraryId;
-        DataService.putBook(props.lib_id, props.bid, val).
+        val.premiereDate = new Date(val.premiereDate, 1, 1);
+        DataService.putFilm(props.lib_id, props.fid, val).
             then(() => {
                 //props.setGlobalMessage("Hi! Have a wonderful day 😊");
                 makeToast();
@@ -98,9 +113,10 @@ export default function EditBookForm(props) {
 
     return (
         <Box mt={10}>
-            {book ? (
+            {film ? (
                 <Formik
-                    initialValues={{ title: book.title, author: book.author, description: book.description, genre: book.genre, read: book.read }}
+                    initialValues={{ title: film.title, director: film.director, description: film.description, genre: film.genre, 
+                        premiereDate: new Date(film.premiereDate).getFullYear(), watched: film.watched }}
                     onSubmit={(values, actions) => {
                         console.log(values);
                         handleSubmit(values, actions);
@@ -118,12 +134,12 @@ export default function EditBookForm(props) {
                                 )}
                             </Field>
                             <br />
-                            <Field name='author' validate={validateField}>
+                            <Field name='director' validate={validateField}>
                                 {({ field, form }) => (
-                                    <FormControl isInvalid={form.errors.author && form.touched.author}>
-                                        <FormLabel htmlFor='author'>Author</FormLabel>
-                                        <Input {...field} id='author' placeholder='author' />
-                                        <FormErrorMessage>{form.errors.author}</FormErrorMessage>
+                                    <FormControl isInvalid={form.errors.director && form.touched.director}>
+                                        <FormLabel htmlFor='director'>Director:</FormLabel>
+                                        <Input {...field} id='director' placeholder='director' />
+                                        <FormErrorMessage>{form.errors.director}</FormErrorMessage>
                                     </FormControl>
                                 )}
                             </Field>
@@ -131,9 +147,25 @@ export default function EditBookForm(props) {
                             <Field name='genre' validate={validateGenre}>
                                 {({ field, form }) => (
                                     <FormControl isInvalid={form.errors.genre && form.touched.genre}>
-                                        <FormLabel htmlFor='genre'>Genre</FormLabel>
+                                        <FormLabel htmlFor='genre'>Genre:</FormLabel>
                                         <Input {...field} id='genre' placeholder='genre' />
                                         <FormErrorMessage>{form.errors.genre}</FormErrorMessage>
+                                    </FormControl>
+                                )}
+                            </Field>
+                            <br />
+                            <Field name='premiereDate' validate={validateYear}>
+                                {({ field, form }) => (
+                                    <FormControl isInvalid={form.errors.premiereDate && form.touched.premiereDate}>
+                                        <FormLabel htmlFor='premiereDate'>Premiere date (year):</FormLabel>
+                                        <NumberInput step={1} min={1900} precision={0} {...field}>
+                                            <NumberInputField {...field} id="premiereDate" placeholder="premiere date" />
+                                            <NumberInputStepper>
+                                                <NumberIncrementStepper />
+                                                <NumberDecrementStepper />
+                                            </NumberInputStepper>
+                                        </NumberInput>
+                                        <FormErrorMessage>{form.errors.premiereDate}</FormErrorMessage>
                                     </FormControl>
                                 )}
                             </Field>
@@ -141,20 +173,20 @@ export default function EditBookForm(props) {
                             <Field name='description' validate={validateDescription}>
                                 {({ field, form }) => (
                                     <FormControl isInvalid={form.errors.description && form.touched.description}>
-                                        <FormLabel htmlFor='description'>Description</FormLabel>
+                                        <FormLabel htmlFor='description'>Description:</FormLabel>
                                         <Input {...field} id='description' placeholder='description' />
                                         <FormErrorMessage>{form.errors.description}</FormErrorMessage>
                                     </FormControl>
                                 )}
                             </Field>
                             <br />
-                            <Field name='read' type="checkbox">
+                            <Field name='watched' type="checkbox">
                                 {({ field, form }) => (
-                                    <FormControl isInvalid={form.errors.read && form.touched.read}>
-                                        <FormLabel htmlFor='read'>
+                                    <FormControl isInvalid={form.errors.watched && form.touched.watched}>
+                                        <FormLabel htmlFor='watched'>
                                             <HStack>
-                                                <p>Read by me</p>
-                                                <Checkbox {...field} id='read' defaultChecked={book.read}/>
+                                                <p>Watched by me</p>
+                                                <Checkbox {...field} id='watched' defaultChecked={film.watched}/>
                                             </HStack>
                                         </FormLabel>
                                     </FormControl>
@@ -167,16 +199,17 @@ export default function EditBookForm(props) {
                                     <AlertDescription>{message}</AlertDescription>
                                 </Alert> : ""}
                             </Box>
+
                             <Button
-                            mt={4}
-                            mr={5}
-                            width={100}
-                            colorScheme='red'
-                            isLoading={props.isSubmitting}
-                            onClick={() => {navigate(`/library/${AuthService.getCurrentUser().libraryId}`);}}
-                        >
-                            Cancel
-                        </Button>
+                                mt={4}
+                                mr={5}
+                                width={100}
+                                colorScheme='red'
+                                isLoading={props.isSubmitting}
+                                onClick={() => { navigate(`/library/${id}`); }}
+                            >
+                                Cancel
+                            </Button>
                             <Button
                                 mt={4}
                                 width={100}
@@ -184,7 +217,7 @@ export default function EditBookForm(props) {
                                 isLoading={props.isSubmitting}
                                 type='submit'
                             >
-                                Edit book
+                                Edit film
                             </Button>
                         </Form>
 

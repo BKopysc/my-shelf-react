@@ -6,6 +6,7 @@ import DataService from "../services/data.service";
 import Books from "./Library/Books";
 import GlobalToast from "./Tools/GlobalToast";
 import CustomModal from "./Tools/CustomModal";
+import Films from "./Library/Films";
 
 function Library(props) {
 
@@ -16,6 +17,7 @@ function Library(props) {
     const [modalTitle, setModalTitle] = useState(false);
     const [modalContent, setModalContent] = useState(false);
     const [idToDelete, setIdToDelete] = useState(undefined);
+    const [filmIdToDelete,setFilmIdToDelete] = useState(undefined);
 
     const { id } = useParams();
     const toast = useToast();
@@ -35,17 +37,23 @@ function Library(props) {
         if (true) {
             DataService.getLibrary(id).then(response => {
                 setBooks(response.data.books);
+                setFilms(response.data.films);
                 setPrivacy(response.data.isPrivate);
-                console.log(response.data.books);
+                console.log(response.data);
             })
                 .catch(e => {
                     console.log(e);
                 })
         }
+        
     }
 
     const addBook = () => {
         navigate(`/library/${currentUser.libraryId}/new-book`);
+    }
+
+    const addFilm = () => {
+        navigate(`/library/${currentUser.libraryId}/new-film`);
     }
 
 
@@ -68,6 +76,26 @@ function Library(props) {
         );
     }
 
+    
+    const deleteOneFilm = () => {
+        DataService.deleteFilm(id, filmIdToDelete).then(() => {
+          GlobalToast.makeSuccToast("Film deleted!", toast);
+          var new_films = films.splice(films.findIndex(function(i){ return i.id === filmIdToDelete;}), 1);
+          setFilms(new_films);
+          setFilmIdToDelete(undefined);
+      },
+          (error) => {
+              const resMessage =
+                  (error.response &&
+                      error.response.data &&
+                      error.response.data.message) ||
+                  error.message ||
+                  error.toString();
+                  alert(resMessage);
+          }
+      );
+  }
+
     const confirmDelete = () => {
         onClose();
         deleteOneBook();
@@ -78,6 +106,18 @@ function Library(props) {
         setIdToDelete(undefined);
     }
 
+    const confirmFilmDelete = () => {
+        onClose();
+        deleteOneFilm();
+    }
+
+    const rejectFilmDelete = () => {
+        onClose();
+        setFilmIdToDelete(undefined);
+    }
+
+
+
     const deleteCurrentBook = (book_id) => {
         onOpen();
         setModalTitle("Delete book")
@@ -85,9 +125,14 @@ function Library(props) {
         setIdToDelete(book_id);
     }
 
-    const addFilm = () => {
-        navigate("/films/new");
+    const deleteCurrentFilm = (film_id) => {
+        onOpen();
+        setModalTitle("Delete films")
+        setModalContent("Are you sure?")
+        setFilmIdToDelete(film_id);
     }
+
+
 
     useEffect(() => {
         retrieveLibrary();
@@ -96,7 +141,7 @@ function Library(props) {
     return (
         <Box>
             <CustomModal onOpen={onOpen} onClose={onClose} isOpen={isOpen} title={modalTitle} content={modalContent}
-            confirmDelete={confirmDelete} rejectDelete={rejectDelete}
+            confirmDelete={idToDelete ? confirmDelete : confirmFilmDelete} rejectDelete={idToDelete ? rejectDelete : rejectFilmDelete}
             >
             </CustomModal>
             {!privacy ?
@@ -145,19 +190,22 @@ function Library(props) {
                             <TabPanel>
                                 {films.length > 0 ? (
                                     <Box>
+                                        {isOwner ? (
                                         <Box>
-                                            <Button colorScheme={"teal"}>Add new film</Button>
-                                        </Box>
+                                            <Button colorScheme={"teal"} onClick={addFilm}>+ Add new film</Button>
+                                        </Box> ) : (<></>)}
                                         <Box mt={10} ml={20} mr={20}>
-                                            <Books userBooks={books} />
+                                            <Films userFilms={films} isOwner={isOwner} lib_id={id} deleteCurrentFilm={deleteCurrentFilm}/>
                                         </Box>
                                     </Box>
                                 ) : (
                                     <Box mt={10}>
                                         <Text fontSize={"25"} fontStyle={"italic"} fontWeight={"light"}>We are the movies and the movies are us</Text>
+                                        {isOwner ? (
                                         <Box mt={5}>
-                                            <Button colorScheme={"teal"} fontSize={"15"}>+ Add new 🎬 ! </Button>
+                                            <Button colorScheme={"teal"} fontSize={"15"} onClick={addFilm}>+ Add new 🎬 ! </Button>
                                         </Box>
+                                        ) : (<></>)}
                                     </Box>
                                 )}
                             </TabPanel>

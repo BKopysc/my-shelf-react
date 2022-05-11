@@ -37,34 +37,7 @@ export default function EditBookReviewForm(props) {
         })
     }
 
-    // function retrieveBook() {
-    //     // var ow = false;
-    //     // if (currentUser) {
-    //     //     if (currentUser.libraryId == id) {
-    //     //         setIsOwner(true);
-    //     //         ow = true;
-    //     //     }
-    //     // }
-    //     if (true) {
-    //         DataService.getBook(props.lib_id, props.bid).then(response => {
-    //             setBook(response.data);
-    //             //alert(response.data);
-    //             //setPrivacy(response.data.isPrivate);
-    //             console.log(response.data);
-    //         })
-    //             .catch(e => {
-    //                 console.log(e);
-    //             })
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     retrieveBook();
-    // }, []);
-
     function handleSubmit(val, actions) {
-        //var lib_id = AuthService.getCurrentUser().libraryId;
-        //alert(JSON.stringify(val));
 
         DataService.putBookReview(props.lib_id, props.bookId, val).
             then(() => {

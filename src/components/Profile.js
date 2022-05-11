@@ -6,26 +6,7 @@ import DataService from "../services/data.service";
 
 function Profile() {
 
-    // const [content, setContent] = useState("");
-    // useEffect(() => {
-    //   UserService.getUserBoard().then(
-    //     (response) => {
-    //       setContent(response.data);
-    //     },
-    //     (error) => {
-    //       const _content =
-    //         (error.response &&
-    //           error.response.data &&
-    //           error.response.data.message) ||
-    //         error.message ||
-    //         error.toString();
-    //       setContent(_content);
-    //     }
-    //   );
-    // }, []);
         const currentUser = AuthService.getCurrentUser();
-
-
 
     return (
         <Box>
@@ -33,7 +14,7 @@ function Profile() {
             {currentUser ?
                 (<Box>
                     <Heading></Heading>
-                    <Heading>Profile!</Heading>
+                    <Heading>Hi {currentUser.username}</Heading>
                 </Box>)
                 :
                 (

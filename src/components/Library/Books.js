@@ -123,11 +123,11 @@ export default function Books(props) {
 
     const test = [1, 2, 3, 4, 5, 6]
     const gridBooks = bookState.map((book) =>
-        <Box backgroundColor="#e6f2ee" border={"1px"} borderColor={"teal"} rounded={"lg"} width="250px" height='300px' position={"relative"}>
+        <Box backgroundColor="#e6f2ee" border={"1px"} borderColor={"teal"} rounded={"lg"} width="260px" height='300px' position={"relative"}>
+            <Text position={"absolute"} top="2" left="2">📕</Text>
             {isOwner && isOwner.libraryId == props.lib_id ? (
                 <Box position={"absolute"} top="2" right="2">
-
-                    <Button width={5} height={8} mr={2} variant={"ghost"} colorScheme="teal"
+                    <Button width={5} height={8} mr={2} variant={"outline"} colorScheme="teal"
                         as={RouterLink} to={`/library/${props.lib_id}/edit-book/${book.id}`}>
                         ✏️
                     </Button>
@@ -138,7 +138,7 @@ export default function Books(props) {
             )}
 
             <VStack mt={5}>
-                <Text fontSize={20} fontWeight={"bold"} width="200px">{book.title}</Text>
+                <Text fontSize={20} fontWeight={"bold"} width="150px">{book.title}</Text>
                 <Text width="200px">{book.author}</Text>
                 <Text fontStyle={"italic"}>{book.genre}</Text>
                 <Box width="200px" pt="20px">

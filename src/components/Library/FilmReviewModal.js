@@ -4,9 +4,8 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import DataService from '../../services/data.service';
-import EditBookReviewForm from '../Forms/EditBookReviewForm';
-function BookReviewModal(props) {
-
+import EditFilmReviewForm from '../Forms/EditFilmReviewForm';
+function FilmReviewModal(props) {
 
     const [review, setReview] = useState();
     const [shouldEdit, setShouldEdit] = useState(false);
@@ -20,16 +19,16 @@ function BookReviewModal(props) {
                         <Button isLoading={true}></Button>
                     ) : (
                         <div>
-                            {(!props.bookReview.title || props.shouldEditModal) && props.isOwner ? (
+                            {(!props.filmReview.title || props.shouldEditModal) && props.isOwner ? (
                                 <div>
-                                    {!props.bookReview.title ? (
+                                    {!props.filmReview.title ? (
                                         <ModalHeader>Create review</ModalHeader>
                                     ) : (
                                         <ModalHeader>Edit review</ModalHeader>
                                     )}
                                     <ModalCloseButton />
                                     <ModalBody>
-                                        <EditBookReviewForm review={props.bookReview} lib_id={props.lib_id} bookId={props.bookId}
+                                        <EditFilmReviewForm review={props.filmReview} lib_id={props.lib_id} filmId={props.filmId}
                                             recieveReviewData={props.recieveReviewData} />
                                     </ModalBody>
                                     <ModalFooter>
@@ -37,10 +36,10 @@ function BookReviewModal(props) {
                                 </div>
                             ) : (
                                 <div>
-                                    <ModalHeader>{props.bookReview.title}</ModalHeader>
+                                    <ModalHeader>{props.filmReview.title}</ModalHeader>
                                     <ModalCloseButton />
                                     <ModalBody>
-                                        {!props.isOwner && !props.bookReview.title ?
+                                        {!props.isOwner && !props.filmReview.title ?
                                             (
                                                 <div>
                                                     There isn't any review
@@ -49,17 +48,23 @@ function BookReviewModal(props) {
                                             : (
                                                 <VStack alignItems={"flex-start"}>
                                                     <Text textAlign={"left"} fontWeight={"bold"}>Opinion:</Text>
-                                                    <Text>{props.bookReview.text}</Text>
+                                                    <Text>{props.filmReview.text}</Text>
+                                                    <Text textAlign={"left"} fontWeight={"bold"}>Best actor:</Text>
+                                                    <Text>{props.filmReview.bestActor}</Text>
                                                     <HStack>
                                                         <Text fontWeight={"bold"}>Score: </Text>
-                                                        <Text>{props.bookReview.score} ⭐</Text>
+                                                        <Text>{props.filmReview.score} ⭐</Text>
                                                     </HStack>
                                                     <HStack>
-                                                        <Text fontWeight={"bold"}>Time to read: </Text>
-                                                        <Text>About {props.bookReview.timeToRead} (hours)</Text>
+                                                        <Text fontWeight={"bold"}>Camera score: </Text>
+                                                        <Text>{props.filmReview.cameraScore} ⭐</Text>
                                                     </HStack>
                                                     <HStack>
-                                                        {props.bookReview.shouldRead ? (
+                                                        <Text fontWeight={"bold"}>Play score: </Text>
+                                                        <Text>{props.filmReview.playScore} ⭐</Text>
+                                                    </HStack>
+                                                    <HStack>
+                                                        {props.filmReview.shouldWatch ? (
                                                             <Text>Recommended ✔️</Text>
                                                         ) : (
                                                             <Text>Not recommended ❌</Text>
@@ -76,7 +81,7 @@ function BookReviewModal(props) {
                                         {props.isOwner ? (
                                             <div>
                                                 <Button colorScheme="teal" mr={5} onClick={() => props.setShouldEditModal(true)}>Edit</Button>
-                                                <Button colorScheme="red" onClick={() => props.deleteBookReview(props.bookId)}>Delete</Button>
+                                                <Button colorScheme="red" onClick={() => props.deleteFilmReview(props.filmId)}>Delete</Button>
                                             </div>
                                         ) : (<div />)}
 
@@ -92,4 +97,4 @@ function BookReviewModal(props) {
     )
 }
 
-export default BookReviewModal;
+export default FilmReviewModal;

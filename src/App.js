@@ -15,6 +15,9 @@ import AuthService from './services/auth.service';
 import Library from './components/Library';
 import AddBook from './components/AddBook';
 import EditBook from './components/EditBook';
+import AddFilm from './components/AddFilm';
+import EditFilm from './components/EditFilm';
+import FindLibrary from './components/FindLibrary';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -71,6 +74,9 @@ function App() {
           <Route path="/profile" element={<Profile/>} />
           <Route path="/library/:id/new-book" element={<AddBook/>} />
           <Route path="/library/:id/edit-book/:bid" element={<EditBook/>} />
+          <Route path="/library/:id/new-film" element={<AddFilm/>} />
+          <Route path="/library/:id/edit-film/:fid" element={<EditFilm/>} />
+          <Route path="/find-library/" element={<FindLibrary /> } />
         </Routes>
       </Box>
     </div>
