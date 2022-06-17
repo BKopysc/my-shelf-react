@@ -21,9 +21,30 @@ Aplikacja umożliwia:
 - filtrować rzeczy
 - eksportować rezultaty do .XLS
 
-
-
 ***
+
+
+![alt text](https://github.com/BKopysc/my-shelf-react/blob/master/images/1.png)
+
+![alt text](https://github.com/BKopysc/my-shelf-react/blob/master/images/2a.png)
+
+![alt text](https://github.com/BKopysc/my-shelf-react/blob/master/images/2b.png)
+
+![alt text](https://github.com/BKopysc/my-shelf-react/blob/master/images/3a.png)
+
+![alt text](https://github.com/BKopysc/my-shelf-react/blob/master/images/3.png)
+
+![alt text](https://github.com/BKopysc/my-shelf-react/blob/master/images/4.png)
+
+![alt text](https://github.com/BKopysc/my-shelf-react/blob/master/images/5.png)
+
+![alt text](https://github.com/BKopysc/my-shelf-react/blob/master/images/6.png)
+
+![alt text](https://github.com/BKopysc/my-shelf-react/blob/master/images/7.png)
+
+![alt text](https://github.com/BKopysc/my-shelf-react/blob/master/images/8.png)
+
+![alt text](https://github.com/BKopysc/my-shelf-react/blob/master/images/9.png)
 
 
 
