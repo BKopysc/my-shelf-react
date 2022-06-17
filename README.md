@@ -11,7 +11,7 @@ Application allows you to:
 - export results to .XLS
 
 ***
-# MyShelf - aplikacja do zarządzanie dziełami kultury
+# MyShelf - aplikacja do zarządzania dziełami kultury
 
 Aplikacja umożliwia:
 - zamieszczanie posiadanych książek/filmów
