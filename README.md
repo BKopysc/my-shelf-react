@@ -7,6 +7,8 @@ Application allows you to:
 - add reviews
 - browse other user's library
 - view other user's reviews
+- filter items
+- export results to .XLS
 
 ***
 # MyShelf - aplikacja do zarządzanie dziełami kultury
@@ -16,6 +18,8 @@ Aplikacja umożliwia:
 - dodawanie opinii
 - przeglądanie biblioteki innych użytkowników
 - przeglądanie opinii innych użytkowników
+- filtrować rzeczy
+- eksportować rezultaty do .XLS
 
 
 
